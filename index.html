@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .color-red {
+        color: red;
+      }
+
+      .color-blue {
+        color: blue;
+      }
+
+      .is-loading {
+        background: red;
+      }
+
+      .loaded {
+        background: green;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <h1>All Tasks</h1>
+      <ul>
+        <li v-for="task in tasks" v-text="task.description"></li>
+      </ul>
+      <h1>Incompleted Tasks</h1>
+      <ul>
+        <li v-for="task in incompleteTasks">
+          <span v-text="task.description"></span>
+          <button @click="task.completed = true">DONE</button>
+        </li>
+      </ul>
+
+      <input type="text" id="input" v-model="newName" />
+
+      <button
+        :title="customTitle"
+        id="button"
+        @click="addName"
+        v-bind:disabled="buttonState"
+      >
+        Add
+      </button>
+
+      <h1 :class="className">New H1</h1>
+
+      <button :class="{ 'is-loading' : isLoading }" @click="toggleClass">
+        Click Me
+      </button>
+
+      <h1 v-text="new Date()"></h1>
+      <p>{{ reversedMessage }}</p>
+      <h2>{{ new Date() }}</h2>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script>
+      var app = new Vue({
+        el: "#root",
+        data: {
+          hello: "hello world",
+          foo: "bar",
+          newName: "",
+          names: ["rand", "tom", "mary", "tiktok"],
+          customTitle: "Click here to add",
+          className: "color-red",
+          isLoading: false,
+          tasks: [
+            { description: "Go to the shops", completed: true },
+            { description: "Finish screencast", completed: false },
+            { description: "Clear inbox", completed: false },
+            { description: "Make dinner", completed: false },
+            { description: "Clean house", completed: true },
+          ],
+          buttonState: true,
+        },
+        methods: {
+          addName() {
+            console.log("add name methodd");
+            this.names.push(this.newName);
+            this.newName = "";
+          },
+          toggleClass() {
+            this.isLoading = true;
+          },
+          markAsCompleted(task) {
+            task.completed = true;
+          },
+        },
+
+        computed: {
+          reversedMessage() {
+            return this.hello.split("").reverse().join("");
+          },
+          incompleteTasks() {
+            return this.tasks.filter((task) => !task.completed);
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
