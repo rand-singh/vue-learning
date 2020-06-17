@@ -54,25 +54,32 @@ class Form {
     for (let field in this.originalData) {
       this[field] = "";
     }
+    this.errors.clear();
   }
 
   submit(requestType, url) {
-    axios[requestType](url, this.data())
-      .then(this.onSuccess.bind(this))
-      .catch(this.onFail.bind(this));
+    return new Promise((resolve, reject) => {
+      axios[requestType](url, this.data())
+        .then((response) => {
+          this.onSuccess(response.data);
+          resolve(response.data);
+        })
+        .catch((errpr) => {
+          this.onFail(error.response.data);
+
+          reject(error.response.data);
+        });
+    });
   }
 
-  onSuccess(response) {
-    console.log(response.data.message);
-    this.errors.clear();
+  onSuccess(data) {
+    console.log(data);
+
     this.reset();
   }
 
-  onFail(error) {
-    this.errors.record({
-      name: "name is required",
-      description: "description is required",
-    });
+  onFail(errors) {
+    this.errors.record(errors);
   }
 }
 
@@ -88,7 +95,10 @@ new Vue({
 
   methods: {
     onSubmit() {
-      this.form.submit("post", "http://dummy.restapiexample.com/api/v1/create");
+      this.form
+        .submit("post", "http://dummy.restapiexample.com/api/v1/create")
+        .then((data) => console.log("hanling it"))
+        .catch((error) => console.error(error));
     },
   },
 });
