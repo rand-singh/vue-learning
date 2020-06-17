@@ -23,3 +23,27 @@ new Vue({
     showModal: false,
   },
 });
+
+let store = {
+  user: {
+    name: "jon",
+  },
+};
+
+new Vue({
+  el: "#one",
+
+  data: {
+    foo: "bar",
+    shared: store,
+  },
+});
+
+new Vue({
+  el: "#two",
+
+  data: {
+    foo: "bar",
+    shared: store,
+  },
+});
